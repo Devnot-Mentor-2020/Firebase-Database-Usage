@@ -36,4 +36,22 @@ class FirebaseService {
         return Future.error(response.statusCode);
     }
   }
+  
+  Future<bool> putCourse() async {
+    Map<String, String> headers = {"Content-type": "application/json"};
+    Map<String, dynamic> jsonModel = {
+      "name": "Algorithm Analysis",
+    "grade" :"CB"
+    };
+    var msg = json.encode(jsonModel);
+    print(jsonModel.runtimeType);
+    final response = await http.put("$FIREBASE_URL/courses/4.json",headers: headers,body: msg);
+    print(response.statusCode);
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        return true;
+      default:
+        return false;
+    }
+  }
 }

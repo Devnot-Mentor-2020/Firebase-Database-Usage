@@ -18,6 +18,12 @@ class _FireHomeViewState extends State<CourseHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: ()  async{
+        var result = await service.putCourse();
+        if(result){
+          print("oldu");
+        }
+      }),
       appBar: AppBar(),
       body: FutureBuilder(future:service.getCourses(),builder: (context, snapshot){//whatever returns from this function, will be avaliable inside snapshot paremeter.
         final List<Course> courseList = snapshot.data;
