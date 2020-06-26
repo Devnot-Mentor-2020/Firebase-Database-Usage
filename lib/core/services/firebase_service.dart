@@ -1,27 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'package:firebase_realtime_usage/core/models/course.dart';
+import 'package:firebase_realtime_usage/view/course_operations_homeview.dart';
 import 'package:http/http.dart' as http;
 
 class FirebaseService {
+  static FirebaseService  firebaseInstance = FirebaseService._init();
   static const String FIREBASE_URL = "https://fir-uusage.firebaseio.com/";
 
-  //BaseService _baseService = BaseService.instance;
+  static FirebaseService get prefInstance => firebaseInstance;
 
-  /*Future postUser(UserRequest request) async {
-    var jsonModel = json.encode(request.toJson());
-    final response = await http.post(FIREBASE_AUTH_URL, body: jsonModel);
+  FirebaseService._init();
 
-    switch (response.statusCode) {
-      case HttpStatus.ok:
-        return true;
-      default:
-        var errorJson = json.decode(response.body);
-        var error = FirebaseAuthError.fromJson(errorJson);
-        return error;
-    }
-  }*/
 
   Future<List<Course>> getCourses() async {
     final response = await http.get("$FIREBASE_URL/courses.json");
@@ -37,15 +27,11 @@ class FirebaseService {
     }
   }
   
-  Future<bool> putCourse() async {
+  Future<bool> putCourse(Course course) async {
+    int indexToPut = CourseHomePage.numberOfCourses;
     Map<String, String> headers = {"Content-type": "application/json"};
-    Map<String, dynamic> jsonModel = {
-      "name": "Algorithm Analysis",
-    "grade" :"CB"
-    };
-    var msg = json.encode(jsonModel);
-    print(jsonModel.runtimeType);
-    final response = await http.put("$FIREBASE_URL/courses/4.json",headers: headers,body: msg);
+    var msg = json.encode(course.toJson());
+    final response = await http.put("$FIREBASE_URL/courses/$indexToPut.json",headers: headers,body: msg);
     print(response.statusCode);
     switch (response.statusCode) {
       case HttpStatus.ok:
