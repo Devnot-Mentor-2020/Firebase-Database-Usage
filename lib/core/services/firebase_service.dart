@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_realtime_usage/core/models/course.dart';
-import 'package:firebase_realtime_usage/view/course_operations_homeview.dart';
+import 'package:firebase_realtime_usage/view/shared/shared_app_data.dart';
 import 'package:http/http.dart' as http;
 
 class FirebaseService {
@@ -20,15 +20,15 @@ class FirebaseService {
       case HttpStatus.ok:
         final decodedJson = json.decode(response.body) as List;
         List<Course> courseList =decodedJson.map((jsonMap) => Course.fromJson(jsonMap)).toList();
-        //takes all elements in decodedjson one by one creates an course objectand hold them as list
+        //takes all elements in decodedjson one by one creates an course object  and hold them as list
         return courseList;
       default:
         return Future.error(response.statusCode);
     }
   }
-  
+
   Future<bool> putCourse(Course course) async {
-    int indexToPut = CourseHomePage.numberOfCourses;
+    int indexToPut = SharedAppData.numberOfCourses;
     Map<String, String> headers = {"Content-type": "application/json"};
     var msg = json.encode(course.toJson());
     final response = await http.put("$FIREBASE_URL/courses/$indexToPut.json",headers: headers,body: msg);

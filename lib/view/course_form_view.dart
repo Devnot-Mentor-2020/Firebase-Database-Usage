@@ -1,5 +1,6 @@
 import 'package:firebase_realtime_usage/core/models/course.dart';
 import 'package:firebase_realtime_usage/core/services/firebase_service.dart';
+import 'package:firebase_realtime_usage/core/validator/textfield_validator.dart';
 import 'package:flutter/material.dart';
 
 class CourseFormView extends StatefulWidget {
@@ -12,6 +13,7 @@ class CourseFormView extends StatefulWidget {
 }
 
 class _CourseFormViewState extends State<CourseFormView> {
+  TextFieldValidator _textFieldValidator = TextFieldValidator();
   String _courseName;
   String _letterGrade;
   final formKey=GlobalKey<FormState>();
@@ -29,15 +31,15 @@ class _CourseFormViewState extends State<CourseFormView> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          usernameTextField(),
-          passwordTextField(),
+          courseNameTextField(),
+          letterGradeTextField(),
           _addCourseButton(context),
         ],
       ),
     );
   }
 
-  Padding usernameTextField() {
+  Padding courseNameTextField() {
     return Padding(
       padding: EdgeInsets.all(10),
       child: TextFormField(
@@ -47,24 +49,24 @@ class _CourseFormViewState extends State<CourseFormView> {
           labelText: "Course Name",
           border: OutlineInputBorder(),
         ),
-        validator: (value) =>validateCourseName(value),
+        validator: (value) =>_textFieldValidator.validateCourseName(value),
         onSaved: (input) => _courseName=input,
       ),
     );
   }
 
 
-  Padding passwordTextField() {
+  Padding letterGradeTextField() {
     return Padding(
       padding: EdgeInsets.all(10),
       child: TextFormField(
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.lock),
           hintText: "Enter letter grade",
-          labelText: "Grade",
+          labelText: "Grade Name",
           border: OutlineInputBorder(),
         ),
-        validator: (value) =>validateLetterGrade(value),
+        validator: (value) =>_textFieldValidator.validateLetterGrade(value),
         onSaved: (input) => _letterGrade=input,
       ),
     );
@@ -95,24 +97,6 @@ class _CourseFormViewState extends State<CourseFormView> {
         backgroundColor: Colors.green,
         content: Text("Course Name $_courseName, Letter Grade $_letterGrade is added"),
       ));
-    }
-  }
-
-  String validateCourseName(String name){
-    if(name.length <5){
-      return "Course name should be longer";
-    }
-    else{
-      return null;
-    }
-  }
-
-  String validateLetterGrade(String grade){
-    if(grade.length != 2){
-      return "Grade must be 2 character";
-    }
-    else{
-      return null;
     }
   }
 
